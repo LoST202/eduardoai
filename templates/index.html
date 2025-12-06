@@ -7,31 +7,59 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* --- GLOBAL THEME OVERRIDES (ORANGE EVERYWHERE) --- */
         :root {
             --pico-border-radius: 16px;
             --pico-typography-spacing-vertical: 1.5rem;
             --pico-form-element-spacing-vertical: 0.75rem;
             --pico-form-element-spacing-horizontal: 1rem;
             
+            /* --- FORCE ORANGE PALETTE --- */
+            /* These apply to BOTH Light and Dark modes by default */
             --pico-primary: #f97316;
             --pico-primary-background: #f97316;
             --pico-primary-hover: #ea580c;
             --pico-primary-underline: rgba(249, 115, 22, 0.5);
             --pico-primary-inverse: #fff;
+            
+            /* Fix Blue Glow/Focus states to Orange */
+            --pico-form-element-focus-color: rgba(249, 115, 22, 0.25);
+            --pico-primary-focus: rgba(249, 115, 22, 0.125);
         }
 
+        /* --- LIGHT THEME SPECIFICS (UNIFORM WHITE + ORANGE) --- */
+        [data-theme="light"], :root:not([data-theme="dark"]) {
+            /* Re-assert Orange for Light Mode to override Pico defaults */
+            --pico-primary: #f97316;
+            --pico-primary-background: #f97316;
+            --pico-primary-hover: #ea580c;
+            --pico-form-element-focus-color: rgba(249, 115, 22, 0.25);
+
+            /* Uniform White Backgrounds */
+            --pico-background-color: #ffffff;
+            --pico-card-background-color: #ffffff;
+            --pico-card-sectionning-background-color: #ffffff;
+            --pico-muted-border-color: #e5e7eb;
+            --pico-color: #1f2937; /* Dark gray text for better contrast on white */
+        }
+
+        /* --- DARK THEME SPECIFICS --- */
         [data-theme="dark"] {
             --pico-background-color: #0c0a09;
             --pico-card-background-color: #1c1917;
+            --pico-card-sectionning-background-color: #292524;
+            --pico-muted-border-color: #44403c;
+            --pico-primary: #f97316; /* Ensure Orange stays in Dark */
         }
 
         body { display: flex; flex-direction: column; min-height: 100vh; }
         .container-sm { max-width: 760px; margin-inline: auto; width: 100%; }
 
+        /* Sticky Header */
         header.sticky-header {
             position: sticky; top: 0; z-index: 100;
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            background-color: color-mix(in srgb, var(--pico-background-color), transparent 15%);
+            background-color: color-mix(in srgb, var(--pico-background-color), transparent 10%);
             border-bottom: 1px solid var(--pico-muted-border-color);
             padding-top: 1rem; padding-bottom: 1rem; margin-bottom: 2rem;
         }
@@ -42,6 +70,7 @@
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
+        /* --- Presets Carousel --- */
         .presets-container {
             display: flex; gap: 0.8rem; overflow-x: auto; padding-bottom: 1rem;
             margin-bottom: 1rem; scroll-snap-type: x mandatory;
@@ -58,13 +87,15 @@
         }
         .preset-card:hover {
             border-color: var(--pico-primary);
-            background: color-mix(in srgb, var(--pico-primary), transparent 90%);
+            /* Orange tint on hover */
+            background: color-mix(in srgb, var(--pico-primary), transparent 95%);
             transform: translateY(-3px);
         }
         .preset-icon { font-size: 1.5rem; color: var(--pico-primary); margin-bottom: 0.5rem; }
         .preset-title { font-size: 0.8rem; font-weight: 700; margin-bottom: 0.2rem; }
         .preset-desc { font-size: 0.65rem; opacity: 0.7; line-height: 1.2; }
 
+        /* --- Enhancers Block --- */
         .enhancers-area {
             background: var(--pico-card-sectionning-background-color);
             border: 1px solid var(--pico-muted-border-color);
@@ -83,7 +114,8 @@
         }
         .enhancer-btn {
             display: flex; align-items: center; gap: 0.5rem; width: 100%;
-            background: var(--pico-background-color); border: 1px solid var(--pico-muted-border-color);
+            background: transparent;
+            border: 1px solid var(--pico-muted-border-color);
             padding: 0.35rem 0.6rem; border-radius: 8px; font-size: 0.75rem;
             margin-bottom: 0.4rem; cursor: pointer; transition: all 0.2s;
             text-align: left; color: var(--pico-color);
@@ -96,38 +128,55 @@
         .enhancer-btn:hover i { color: var(--pico-primary); }
         .enhancer-btn:active { transform: scale(0.98); }
 
+        /* Buttons & Standard UI */
         article {
+            background: var(--pico-card-background-color);
             border: 1px solid var(--pico-muted-border-color);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
         }
         #btn-submit, #btn-upload {
             background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%); border: none;
-            font-weight: 700; letter-spacing: 0.5px; border-radius: 12px;
+            font-weight: 700; letter-spacing: 0.5px; border-radius: 12px; color: white;
         }
         #btn-submit:hover { opacity: 0.9; box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4); }
 
+        /* Form Elements - Force Focus Color to Orange */
+        input:focus, textarea:focus, select:focus {
+            --pico-form-element-focus-color: rgba(249, 115, 22, 0.25);
+            border-color: var(--pico-primary);
+        }
+
+        /* Upload Zone */
         .upload-zone {
             border: 2px dashed var(--pico-muted-border-color); border-radius: 12px; padding: 2rem;
             text-align: center; background-color: var(--pico-card-sectionning-background-color);
             transition: all 0.3s ease; margin-bottom: 1rem;
         }
-        .upload-zone:hover { border-color: var(--pico-primary); background-color: color-mix(in srgb, var(--pico-primary), transparent 95%); }
+        .upload-zone:hover { border-color: var(--pico-primary); background-color: color-mix(in srgb, var(--pico-primary), transparent 98%); }
         .upload-icon { font-size: 2rem; color: var(--pico-muted-color); margin-bottom: 1rem; }
 
+        /* Gallery */
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
         .gallery-grid img { width: 100%; height: 150px; object-fit: cover; border-radius: 12px; cursor: zoom-in; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 
+        /* History */
         .history-card { padding: 0; overflow: hidden; }
-        .history-header { padding: 1rem 1.25rem; background: var(--pico-card-sectionning-background-color); border-bottom: 1px solid var(--pico-muted-border-color); display:flex; justify-content:space-between; align-items:center;}
+        .history-header { 
+            padding: 1rem 1.25rem; 
+            background: var(--pico-card-sectionning-background-color); 
+            border-bottom: 1px solid var(--pico-muted-border-color); 
+            display:flex; justify-content:space-between; align-items:center;
+        }
         .history-item { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; border-bottom: 1px solid var(--pico-muted-border-color); }
         .history-thumb { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; }
 
-        .progress-bar { width: 100%; height: 6px; background: var(--pico-card-sectionning-background-color); border-radius: 10px; overflow: hidden; margin-top: 1.5rem; }
+        .progress-bar { width: 100%; height: 6px; background: var(--pico-muted-border-color); border-radius: 10px; overflow: hidden; margin-top: 1.5rem; }
         .progress-fill { height: 100%; background: linear-gradient(90deg, #f59e0b, #ea580c); width: 0%; transition: width 0.3s ease; }
         .hidden { display: none !important; }
         
-        dialog article { padding: 0; overflow: hidden; border: none; }
-        #modal-img { width: 100%; max-height: 70vh; object-fit: contain; background: black; display: block;}
+        dialog article { padding: 0; overflow: hidden; border: none; background: var(--pico-card-background-color);}
+        dialog header, dialog footer { background: var(--pico-card-background-color); border-color: var(--pico-muted-border-color); }
+        #modal-img { width: 100%; max-height: 70vh; object-fit: contain; background: #000; display: block;}
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         #output-area article { animation: fadeIn 0.5s ease-out; }
@@ -152,10 +201,12 @@
 
     <main class="container-sm">
         
+        <!-- Generate Section -->
         <article>
             <form id="generate-form">
                 <label for="prompt"><strong>Что создаем сегодня?</strong></label>
                 
+                <!-- Presets Carousel -->
                 <div class="presets-container">
                     <div class="preset-card" onclick="setPrompt('Diamond ring, platinum band, solitaire cut, macro photography, cinematic lighting')">
                         <i class="fas fa-ring preset-icon"></i>
@@ -191,6 +242,7 @@
                     </button>
                 </div>
 
+                <!-- Enhancers Block -->
                 <div class="enhancers-area">
                     <div class="enhancers-header">
                         <span><i class="fas fa-magic" style="color:var(--pico-primary)"></i> Конструктор промпта</span>
@@ -267,6 +319,7 @@
 
         <section id="output-area"></section>
 
+        <!-- Upload Section -->
         <article class="upload-card">
             <header><strong><i class="fas fa-eraser"></i> Удаление фона</strong></header>
             <div style="padding: 1.5rem;">
@@ -284,6 +337,7 @@
             </div>
         </article>
 
+        <!-- History Section -->
         <article class="history-card">
             <div class="history-header">
                 <strong><i class="fas fa-history"></i> История</strong>
@@ -298,6 +352,7 @@
         </article>
     </main>
 
+    <!-- Modal -->
     <dialog id="preview-modal">
         <article style="max-width: 800px; width:100%;">
             <header style="display:flex; justify-content:space-between; align-items:center;">
@@ -314,6 +369,7 @@
     <script>
         let selectedItems = [];
 
+        // Sets the entire prompt
         const setPrompt = (txt) => {
             const el = document.getElementById('prompt');
             el.value = txt;
@@ -323,6 +379,7 @@
             setTimeout(() => el.style.boxShadow = '', 300);
         };
 
+        // Appends to the prompt
         const addEnhancer = (txt) => {
             const el = document.getElementById('prompt');
             let current = el.value.trim();
@@ -344,6 +401,7 @@
                 'cinematic lighting', '8k resolution', 'macro photography', 'photorealistic', 
                 'dramatic shadows', 'studio lighting', 'sharp focus', 'unreal engine 5', 'gold filigree'
             ];
+            // Add 3 random unique enhancers
             const shuffled = enhancers.sort(() => 0.5 - Math.random());
             shuffled.slice(0, 3).forEach(txt => addEnhancer(txt));
         };
@@ -450,7 +508,7 @@
         }
 
         async function removeBgExisting(filename) {
-            if(!confirm("Изображения?")) return;
+            if(!confirm("Удалить фон для этого изображения?")) return;
             try {
                 const res = await fetch('/remove-background-existing', {
                     method: 'POST',
@@ -493,6 +551,7 @@
             themeToggle.innerHTML = next === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
         });
 
+        // File upload functionality
         document.getElementById('upload-form').addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -523,7 +582,7 @@
                     throw new Error(data.error);
                 }
 
-                alert('Успешно!');
+                alert('Фон успешно удален!');
                 fileInput.value = '';
                 fetchHistory();
 
@@ -531,7 +590,7 @@
                 alert('Ошибка: ' + err.message);
             } finally {
                 btn.setAttribute('aria-busy', 'false');
-                btn.innerHTML = '<i class="fas fa-file-import"></i> Загрузить фон';
+                btn.innerHTML = '<i class="fas fa-file-import"></i> Загрузить и удалить фон';
             }
         });
 
